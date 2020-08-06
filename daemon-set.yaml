@@ -30,6 +30,7 @@ spec:
         name: node-initializer
         app: default-init
     spec:
+      serviceAccountName: node-initializer-sa
       volumes:
       - name: root-mount
         hostPath:
@@ -38,6 +39,10 @@ spec:
         configMap:
           name: entrypoint
           defaultMode: 0744
+      - name: ca-certs
+        configMap:
+          name: ca-certs
+          defaultMode: 0644
       initContainers:
       - image: ubuntu:18.04
         name: node-initializer
@@ -52,6 +57,8 @@ spec:
           mountPath: /root
         - name: entrypoint
           mountPath: /scripts
+        - name: ca-certs
+          mountPath: /mnt/ca-certificates
       containers:
       - image: "gcr.io/google-containers/pause:2.0"
         name: pause
